@@ -47,16 +47,12 @@ def organize_files(path:Path,dry_run=True):
       moves.append((p, unique_path(folder/p.name)))
 
     moved = errors = 0
-    moved_done = []
+    moves_done = []
     for src, dest in moves:
       try:
-        if dry_run:
-          print(f"would move {src.name} -> {dest}")
-        else:
-          dest.parent.mkdir(parents=True, exist_ok=True)
-          src.rename(dest); moved+=1
-          moves_done.append((str(src), str(dest)))
-          return moves_done
+        moves_done.append((str(src), str(dest)))
+        (dest.parent.mkdir(parents=True, exist_ok=True), src.rename(dest), moved:=moved+1) if (not dry_run) else None
+        return {"tool":"organize","dry_run":dry_run,"moved":moved,"errors":errors,"moves":moves_done}
       except Exception as e:
         errors+= 1
 

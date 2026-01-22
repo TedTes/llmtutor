@@ -48,9 +48,13 @@ def  get_file_hash(path:Path) -> str:
 def find_duplicates(path, method="hash", dry_run=True) -> dict[str, list[str]]:
         """Find duplicate groups by hash."""
         folder = Path(str(path).strip()).expanduser().resolve()
+        dups = _find_duplicates(folder) 
+        groups=[{"hash":h,"paths":ps} for h,ps in dups.items()]
+        return {"tool":"dedupe","dry_run":dry_run,"method":method,"groups":groups,"group_count":len(groups)}
+
+def _find_duplicates(folder:Path):
         hash_to_paths = defaultdict(list)
-        root = folder.resolve()
-        if not root.is_dir():
+        if not folder.is_dir():
             raise ValueError(f"Not a directory: {root}")
 
 
@@ -61,7 +65,6 @@ def find_duplicates(path, method="hash", dry_run=True) -> dict[str, list[str]]:
                     hash_to_paths[file_hash].append(str(path))
             
            except Exception as e:
-                print(f"error in find_duplicates",e)
                 continue
         duplicates_only = {h:paths for  h,paths in  hash_to_paths.items() if len(paths) > 1}
         return duplicates_only 

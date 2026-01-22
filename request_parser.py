@@ -3,4 +3,6 @@ from dataclasses import dataclass
 class Request: text:str; path:str; dry_run:bool=True
 
 def parse(argv_or_text, path)->Request:
-    return Request(text=str(argv_or_text), path=str(path), dry_run=True)
+    p = str(path).strip()
+    p = p.replace("\\ ", " ")
+    return Request(text=str(argv_or_text).strip(), path=p, dry_run=True)

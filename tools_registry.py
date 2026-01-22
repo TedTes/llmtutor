@@ -12,4 +12,4 @@ def register(t: Tool) -> None:
 
 
 register(Tool("organize","Organize files in a folder",organize_files,{"path":str,"dry_run":bool}))
-register(Tool("dedupe","Find duplicate files",find_duplicates,{"path":str,"method":str,"dry_run":bool}))
+register(Tool("dedupe","Find duplicate files",find_duplicates,{"path":str,"method":None,"dry_run":bool}))
